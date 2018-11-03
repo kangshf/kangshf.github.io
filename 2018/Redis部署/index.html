@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>亢世峰的个人博客</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="亢世峰,"> 
+    
+    <meta name="author" content="亢世峰"> 
+    <link rel="alternative" href="atom.xml" title="亢世峰的个人博客" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">Redis部署</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">Redis部署</h1>
+        <div class="stuff">
+            <span>十一月 03, 2018</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/学习笔记/">学习笔记</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Redis是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。<br>Redis是一个开源（BSD许可），内存存储的数据结构服务器，可用作数据库，高速缓存和消息队列代理。它支持字符串、哈希表、列表、集合、有序集合，位图，hyperloglogs等数据类型。<br>内置复制、Lua脚本、LRU收回、事务以及不同级别磁盘持久化功能，同时通过Redis Sentinel提供高可用，通过Redis Cluster提供自动分区。<br><img src="/image/redis_logo.jpg" alt="Redis" title="Redis"></p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><ol>
+<li>下载redis压缩包<br><code># wget http://download.redis.io/releases/redis-3.0.6.tar.gz</code></li>
+<li>解压压缩包<br><code># tar -xvf redis-3.0.6.tar.gz</code></li>
+<li>编译源码并安装<br><code># make</code><br><code># make install</code>  </li>
+</ol>
+<ul>
+<li>注：如发生以下错误<br>zmalloc.h:50:31: 致命错误：jemalloc/jemalloc.h：没有那个文件或目录<br>执行命令：<br><code># make MALLOC=libc</code></li>
+</ul>
+<ol start="4">
+<li>复制redis配置文件到指定目录<br><code># cp redis.conf /usr/local/etc</code></li>
+<li>编辑redis.conf<br>将daemonize属性改为yes<br>注掉#bind 127.0.0.1<br>添加权限鉴定requirepass passwd  </li>
+<li><p>编辑redis服务脚本<br><code># vi /etc/init.d/redis</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"># chkconfig: 2345 10 90</span><br><span class="line"># description: Start and Stop redis</span><br><span class="line"></span><br><span class="line">PATH=/usr/local/bin:/sbin:/usr/bin:/bin</span><br><span class="line">REDISPORT=6379</span><br><span class="line">EXEC=/usr/local/bin/redis-server</span><br><span class="line">REDIS_CLI=/usr/local/bin/redis-cli</span><br><span class="line"></span><br><span class="line">PIDFILE=/var/run/redis_6379.pid</span><br><span class="line">CONF=&quot;/usr/local/etc/redis.conf&quot;</span><br><span class="line">case &quot;$1&quot; in</span><br><span class="line">        start)</span><br><span class="line">                if [ -f $PIDFILE ]</span><br><span class="line">                then</span><br><span class="line">                        echo &quot;$PIDFILE exists, process is already running or crashed.&quot;</span><br><span class="line">                else</span><br><span class="line">                        echo &quot;Starting Redis server...&quot;</span><br><span class="line">                        $EXEC $CONF</span><br><span class="line">                fi</span><br><span class="line">                if [ &quot;$?&quot;=&quot;0&quot; ]</span><br><span class="line">                then</span><br><span class="line">                        echo &quot;Redis is running...&quot;</span><br><span class="line">                fi</span><br><span class="line">                ;;</span><br><span class="line">        stop)</span><br><span class="line">                if [ ! -f $PIDFILE ]</span><br><span class="line">                then</span><br><span class="line">                        echo &quot;$PIDFILE not exists, process is not running.&quot;</span><br><span class="line">                else</span><br><span class="line">                        PID=$(cat $PIDFILE)</span><br><span class="line">                        echo &quot;Stopping...&quot;</span><br><span class="line">                       $REDIS_CLI -p $REDISPORT  SHUTDOWN</span><br><span class="line">                        sleep 2</span><br><span class="line">                       while [ -x $PIDFILE ]</span><br><span class="line">                       do</span><br><span class="line">                                echo &quot;Waiting for Redis to shutdown...&quot;</span><br><span class="line">                               sleep 1</span><br><span class="line">                        done</span><br><span class="line">                        echo &quot;Redis stopped&quot;</span><br><span class="line">                fi</span><br><span class="line">                ;;</span><br><span class="line">        restart|force-reload)</span><br><span class="line">                $&#123;0&#125; stop</span><br><span class="line">                $&#123;0&#125; start</span><br><span class="line">                ;;</span><br><span class="line">        *)</span><br><span class="line">               echo &quot;Usage: /etc/init.d/redis &#123;start|stop|restart|force-reload&#125;&quot; &gt;&amp;2</span><br><span class="line">                exit 1</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>redis启停等操作<br>启动<br><code># service redis start</code><br>停止<br><code># service redis stop</code><br>开机自启<br><code># chkconfig redis on</code></p>
+</li>
+</ol>
+<ul>
+<li>注:停止redis实例的其他几种方法<br><code># /usr/local/redis/bin/redis-cli shutdown</code><br>或者<br><code># pkill redis-server</code>  </li>
+<li>注:让redis开机自启的另一种方法<br><code># vim /etc/rc.local</code><br>加入:/usr/local/redis/bin/redis-server /usr/local/redis/etc/redis-conf</li>
+</ul>
+<h3 id="接下来我们看看-usr-local-redis-bin目录下的几个文件是什么"><a href="#接下来我们看看-usr-local-redis-bin目录下的几个文件是什么" class="headerlink" title="接下来我们看看/usr/local/redis/bin目录下的几个文件是什么"></a>接下来我们看看/usr/local/redis/bin目录下的几个文件是什么</h3><ul>
+<li>redis-benchmark：redis性能测试工具</li>
+<li>redis-check-aof：检查aof日志的工具</li>
+<li>redis-check-dump：检查rdb日志的工具</li>
+<li>redis-cli：连接用的客户端</li>
+<li>redis-server：redis服务进程</li>
+</ul>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="http://link.hhtjim.com/163/29567189.mp3">
+            </audio>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="b76f43e1098e8eec596b" data-cs="bce4c27bdf3a220cdb541e8fc8079f1eeb74ab1e" data-r="kangshf.github.io" data-o="kangshf" data-a="kangshf" data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#接下来我们看看-usr-local-redis-bin目录下的几个文件是什么"><span class="toc-number">3.</span> <span class="toc-text">接下来我们看看/usr/local/redis/bin目录下的几个文件是什么</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

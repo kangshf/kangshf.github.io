@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>亢世峰的个人博客</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="亢世峰,"> 
+    
+    <meta name="author" content="亢世峰"> 
+    <link rel="alternative" href="atom.xml" title="亢世峰的个人博客" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">Centos7安装mysql</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">Centos7安装mysql</h1>
+        <div class="stuff">
+            <span>十一月 03, 2018</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/学习笔记/">学习笔记</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>MySQL是一个关系型数据库管理系统，使用的 SQL 语言是用于访问数据库的最常用标准化语言。<br>MySQL 软件采用了双授权政策，分为社区版和商业版，由于其体积小、速度快、总体拥有成本低，尤其是开放源码这一特点，一般中小型网站的开发都选择 MySQL 作为网站数据库。<br>在服务器上部署mysql数据库服务，通常服务器操作系统为CentOS<br>本篇记录一下在CentOS7上安装mysql的常规步骤<br><img src="/image/mysql_logo.jpg" alt="mysql" title="MySQL"></p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><ol>
+<li>下载mysql的repo源<br><code># wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm</code></li>
+<li>安装mysql-community-release-el7-5.noarch.rpm包<br><code># rpm -ivh mysql-community-release-el7-5.noarch.rpm</code><br>安装这个包后，会获得两个mysql的yum repo源：<br>/etc/yum.repos.d/mysql-community.repo<br>/etc/yum.repos.d/mysql-community-source.repo<br>检查mysql源是否安装成功<br><code># yum repolist enabled | grep &quot;mysql.*-community.*&quot;</code><br>可以修改/etc/yum.repos.d/mysql-community.repo源，改变默认安装的mysql版本。<br>比如要安装5.6版本，将5.7源的enabled=1改成enabled=0。<br>然后再将5.6源的enabled=0改成enabled=1即可。  </li>
+<li>安装mysql<br>安装mysql服务端<br><code># yum install mysql-server</code><br>安装mysql客户端<br><code># yum install mysql</code></li>
+<li>启动MySQL服务<br><code># systemctl start mysqld</code><br>或者<br><code># service mysqld start</code></li>
+<li>查看MySQL的启动状态<br><code># systemctl status mysqld</code><br>或者<br><code># service mysqld status</code></li>
+<li>停止MySQL服务<br><code># systemctl stop mysqld</code><br>或者<br><code># service mysqld stop</code></li>
+<li>开机启动<br><code># systemctl enable mysqld</code><br><code># systemctl daemon-reload</code></li>
+</ol>
+<h3 id="默认配置文件路径"><a href="#默认配置文件路径" class="headerlink" title="默认配置文件路径"></a>默认配置文件路径</h3><ul>
+<li>配置文件：/etc/my.cnf  </li>
+<li>日志文件：/var/log//var/log/mysqld.log  </li>
+<li>服务启动脚本：/usr/lib/systemd/system/mysqld.service  </li>
+<li>socket文件：/var/run/mysqld/mysqld.pid  </li>
+</ul>
+<h3 id="修改密码及权限设置"><a href="#修改密码及权限设置" class="headerlink" title="修改密码及权限设置"></a>修改密码及权限设置</h3><ol>
+<li>查看mysql默认临时密码<br><code># cat /var/log/mysqld.log | grep pass</code></li>
+<li>连接mysql<br><code># mysql -u root -p</code><br>然后输入临时密码</li>
+<li>修改密码<br>用临时密码连上数据库后发现执行命令报错：<br>所以要修改mysql生成的随机密码为自己的密码<br><code>mysql&gt; alter user user() identified by &quot;your_passwd”;</code></li>
+<li>修改mysql远程访问用户及权限：<br> 默认只允许root帐户在本地登录，如果要在其它机器上连接mysql，必须修改root允许远程连接，或者添加一个允许远程连接的帐户:  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; GRANT ALL PRIVILEGES ON *.* TO &apos;root&apos;@&apos;%&apos; IDENTIFIED BY &apos;passwd&apos; WITH GRANT OPTION;  </span><br><span class="line">mysql &gt; GRANT ALL PRIVILEGES ON *.* TO &apos;root&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;passwd&apos; WITH GRANT OPTION;  </span><br><span class="line">mysql &gt; flush privileges;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>安装前请检查系统版本为CentOS7<br>CentOS6用户请第一步执行<br><code># wget https://dev.mysql.com/get/mysql80-community-release-el6-1.noarch.rpm</code><br>第二步安装也将安装文件改为el6<br><code># rpm -ivh mysql80-community-release-el6-1.noarch.rpm</code><br>后面步骤基本一致  </p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="http://link.hhtjim.com/163/29567193.mp3">
+            </audio>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="b76f43e1098e8eec596b" data-cs="bce4c27bdf3a220cdb541e8fc8079f1eeb74ab1e" data-r="kangshf.github.io" data-o="kangshf" data-a="kangshf" data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#默认配置文件路径"><span class="toc-number">3.</span> <span class="toc-text">默认配置文件路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改密码及权限设置"><span class="toc-number">4.</span> <span class="toc-text">修改密码及权限设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注意事项"><span class="toc-number">5.</span> <span class="toc-text">注意事项</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
