@@ -54,7 +54,12 @@
         <div class="content markdown">
             <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>MongoDB（来自于英文单词“Humongous”，中文含义为“庞大”）是可以应用于各种规模的企业、各个行业以及各类应用程序的开源数据库。<br>作为一个适用于敏捷开发的数据库，MongoDB的数据模式可以随着应用程序的发展而灵活地更新。<br>与此同时，它也为开发人员 提供了传统数据库的功能：二级索引，完整的查询系统以及严格一致性等等。<br>MongoDB能够使企业更加具有敏捷性和可扩展性，各种规模的企业都可以通过使用MongoDB来创建新的应用，提高与客户之间的工作效率，加快产品上市时间，以及降低企业成本。<br>MongoDB是专为可扩展性，高性能和高可用性而设计的数据库。<br>它可以从单服务器部署扩展到大型、复杂的多数据中心架构。<br>利用内存计算的优势，MongoDB能够提供高性能的数据读写操作。<br>MongoDB的本地复制和自动故障转移功能使您的应用程序具有企业级的可靠性和操作灵活性。<br><img src="/image/mongodb.jpg" alt="mongodb" title="mongodb"></p>
 <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><ol>
-<li>下载MongoDB安装包<br><code># wget http://downloads.mongodb.org/linux/mongodb-linux-x86_64-rhel70-3.6.3.tgz</code><br><code>mongodb-linux-x86_64-rhel62-3.2.8.tgz</code></li>
+<li>下载MongoDB安装包<br><code># wget http://downloads.mongodb.org/linux/mongodb-linux-x86_64-rhel70-3.6.3.tgz</code></li>
+</ol>
+<ul>
+<li>注:CentOS6下载<br><code># wget http://downloads.mongodb.org/linux/mongodb-linux-x86_64-rhel62-3.2.8.tgz</code></li>
+</ul>
+<ol start="2">
 <li>解压程序压缩包<br><code># tar xf mongodb-linux-x86_64-3.6.3.tgz</code></li>
 <li>创建程序安装目录<br><code># mkdir -p /usr/local/mongodb</code><br><code># cd /usr/local/mongodb/</code><br><code># mkdir -p bin conf log data</code></li>
 <li>拷贝二进制程序到安装目录<br><code># cd -</code><br><code># cp mongodb-linux-x86_64-3.6.3/bin/* /usr/local/mongodb/bin</code></li>
