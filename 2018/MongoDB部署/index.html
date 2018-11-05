@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>亢世峰的个人博客</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="亢世峰,"> 
+    
+    <meta name="author" content="亢世峰"> 
+    <link rel="alternative" href="atom.xml" title="亢世峰的个人博客" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">CentOS7系统下MongoDB部署</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">CentOS7系统下MongoDB部署</h1>
+        <div class="stuff">
+            <span>十一月 05, 2018</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/学习笔记/">学习笔记</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>MongoDB（来自于英文单词“Humongous”，中文含义为“庞大”）是可以应用于各种规模的企业、各个行业以及各类应用程序的开源数据库。<br>作为一个适用于敏捷开发的数据库，MongoDB的数据模式可以随着应用程序的发展而灵活地更新。<br>与此同时，它也为开发人员 提供了传统数据库的功能：二级索引，完整的查询系统以及严格一致性等等。<br>MongoDB能够使企业更加具有敏捷性和可扩展性，各种规模的企业都可以通过使用MongoDB来创建新的应用，提高与客户之间的工作效率，加快产品上市时间，以及降低企业成本。<br>MongoDB是专为可扩展性，高性能和高可用性而设计的数据库。<br>它可以从单服务器部署扩展到大型、复杂的多数据中心架构。<br>利用内存计算的优势，MongoDB能够提供高性能的数据读写操作。<br>MongoDB的本地复制和自动故障转移功能使您的应用程序具有企业级的可靠性和操作灵活性。<br><img src="/image/mongodb.jpg" alt="mongodb" title="mongodb"></p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><ol>
+<li>下载MongoDB安装包<br><code># wget http://downloads.mongodb.org/linux/mongodb-linux-x86_64-rhel70-3.6.3.tgz</code><br><code>mongodb-linux-x86_64-rhel62-3.2.8.tgz</code></li>
+<li>解压程序压缩包<br><code># tar xf mongodb-linux-x86_64-3.6.3.tgz</code></li>
+<li>创建程序安装目录<br><code># mkdir -p /usr/local/mongodb</code><br><code># cd /usr/local/mongodb/</code><br><code># mkdir -p bin conf log data</code></li>
+<li>拷贝二进制程序到安装目录<br><code># cd -</code><br><code># cp mongodb-linux-x86_64-3.6.3/bin/* /usr/local/mongodb/bin</code></li>
+<li><p>配置环境变量<br><code># vi /etc/profile.d/mongodb_env.sh</code><br>写入以下内容：</p>
+<blockquote>
+<p>#!/bin/bash<br>export MONGODB_HOME=/usr/local/mongodb<br>PATH=$PATH:$MONGODB_HOME/bin</p>
+</blockquote>
+</li>
+<li><p>使环境变量生效：<br><code># source /etc/profile</code></p>
+</li>
+<li><p>修改mongodb配置文件:<br><code># vi /usr/local/mongodb/conf/mongodb.conf</code></p>
+<blockquote>
+<p>##content<br>systemLog:<br>&#8194;&#8194;destination: file<br>&#8194;&#8194;logAppend: true<br>&#8194;&#8194;path: /data1/application/mongodb/log/mongodb.log<br>#Where and how to store data.<br>storage:<br>&#8194;&#8194;engine: wiredTiger<br>&#8194;&#8194;dbPath: /data1/application/mongodb/data<br>&#8194;&#8194;directoryPerDB: true<br>&#8194;&#8194;journal:<br>&#8194;&#8194;&#8194;&#8194;enabled: true<br>#how the process runs<br>processManagement:<br>&#8194;&#8194;fork: true<br>&#8194;&#8194;pidFilePath: /data1/application/mongodb/log/mongodb.pid<br>#network interfaces<br>net:<br>&#8194;&#8194;port: 27017<br>&#8194;&#8194;bindIp: 0.0.0.0<br>&#8194;&#8194;maxIncomingConnections: 2000<br>security:<br>&#8194;&#8194;authorization: disabled<br>&#8194;&#8194;javascriptEnabled: false<br>setParameter:<br>&#8194;&#8194;failIndexKeyTooLong: false</p>
+</blockquote>
+</li>
+<li><p>mongodb启停<br>启动：<br><code>mongod -f conf/mongodb.conf</code><br>关闭：<br><code>mongod -f conf/mongodb.conf  --shutdown</code><br>在数据库中关闭数据库的方法:<br><code># mongo</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">MongoDB shell version: 3.2.8</span><br><span class="line">connecting to: test</span><br><span class="line">&gt; db.shutdownServer()</span><br><span class="line">shutdown command only works with the admin database; try &apos;use admin&apos;</span><br><span class="line">&gt; use admin</span><br><span class="line">&gt; db.shutdownServer()</span><br><span class="line">server should be down...</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<blockquote>
+<p>mongod进程收到SIGINT信号或者SIGTERM信号，会做一些处理</p>
+<ul>
+<li>关闭所有打开的连接</li>
+<li>将内存数据强制刷新到磁盘</li>
+<li>当前的操作执行完毕</li>
+<li>安全停止<br>&#8194;&#8194;切忌kill -9<br>&#8194;&#8194;数据库直接关闭，数据丢失，数据文件损失，修复数据库（成本高，有风险）</li>
+</ul>
+</blockquote>
+<ol start="9">
+<li><p>用脚本管理mongodb服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">#</span><br><span class="line"># chkconfig: 2345 80 90</span><br><span class="line"># description:mongodb</span><br><span class="line">#################################</span><br><span class="line">MONGODIR=/usr/local/mongodb</span><br><span class="line">MONGOD=$MONGODIR/bin/mongod</span><br><span class="line">MONGOCONF=$MONGODIR/conf/mongod.conf</span><br><span class="line">InfoFile=/tmp/start.mongo</span><br><span class="line">. /etc/init.d/functions</span><br><span class="line"></span><br><span class="line">status()&#123;</span><br><span class="line">  PID=`awk &apos;NR==2&#123;print $NF&#125;&apos; $InfoFile`</span><br><span class="line">  Run_Num=`ps -p $PID|wc -l`</span><br><span class="line">  if [ $Run_Num -eq 2 ]; then</span><br><span class="line">    echo &quot;MongoDB is running&quot;</span><br><span class="line">  else</span><br><span class="line">    echo &quot;MongoDB is shutdown&quot;</span><br><span class="line">    return 3</span><br><span class="line">  fi</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">start() &#123;</span><br><span class="line">  status &amp;&gt;/dev/null</span><br><span class="line">  if [ $? -ne 3 ];then</span><br><span class="line">    action &quot;启动MongoDB,服务运行中...&quot;  /bin/false</span><br><span class="line">    exit 2</span><br><span class="line">  fi</span><br><span class="line">  sudo su - mongod -c &quot;$MONGOD -f $MONGOCONF&quot; &gt;$InfoFile 2&gt;/dev/null</span><br><span class="line">  if [ $? -eq 0 ];then</span><br><span class="line">    action &quot;启动MongoDB&quot;  /bin/true</span><br><span class="line">  else</span><br><span class="line">    action &quot;启动MongoDB&quot;  /bin/false</span><br><span class="line">  fi</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">stop() &#123;</span><br><span class="line">  sudo su - mongod -c &quot;$MONGOD -f $MONGOCONF --shutdown&quot;  &amp;&gt;/dev/null</span><br><span class="line">  if [ $? -eq 0 ];then</span><br><span class="line">    action &quot;停止MongoDB&quot;  /bin/true</span><br><span class="line">  else</span><br><span class="line">    action &quot;停止MongoDB&quot;  /bin/false</span><br><span class="line">  fi</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">case &quot;$1&quot; in</span><br><span class="line">  start)</span><br><span class="line">    start</span><br><span class="line">    ;;</span><br><span class="line">  stop)</span><br><span class="line">    stop</span><br><span class="line">    ;;</span><br><span class="line">  restart)</span><br><span class="line">    stop</span><br><span class="line">    sleep 2</span><br><span class="line">    start</span><br><span class="line">    ;;</span><br><span class="line">  status)</span><br><span class="line">    status</span><br><span class="line">    ;;</span><br><span class="line">  *)</span><br><span class="line">    echo $&quot;Usage: $0 &#123;start|stop|restart|status&#125;&quot;</span><br><span class="line">    exit 1</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>开机自启<br><code># chkconfig redis on</code></p>
+<h3 id="几个建议"><a href="#几个建议" class="headerlink" title="几个建议"></a>几个建议</h3></li>
+</ol>
+<ul>
+<li>mongodb建议以非root用户启动<br>建议创建名为mongodb的用户，修改mongodb文件属主，用mongodb用户启动</li>
+<li><p>禁用THP<br>Transparent Huge Pages (THP)，通过使用更大的内存页面，可以减少具有大量内存的机器上的缓冲区（TLB）查找的开销。<br>但是，数据库工作负载通常对THP表现不佳，因为它们往往具有稀疏而不是连续的内存访问模式。<br>您应该在Linux机器上禁用THP，以确保MongoDB的最佳性能。<br>以root用户做以下操作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; /etc/rc.local &lt;&lt;&apos;EOF&apos;</span><br><span class="line">if test -f /sys/kernel/mm/transparent_hugepage/enabled; then</span><br><span class="line">  echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled</span><br><span class="line">fi</span><br><span class="line">if test -f /sys/kernel/mm/transparent_hugepage/defrag; then</span><br><span class="line">   echo never &gt; /sys/kernel/mm/transparent_hugepage/defrag</span><br><span class="line">fi</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用XFS<br>在Linux上运行MongoDB时，官方建议使用Linux内核版本2.6.36或更高版本，使用XFS或EXT4文件系统。<br>如果可能，最好使用XFS，因为它通常与MongoDB表现更好。<br>使用WiredTiger存储引擎，强烈建议使用XFS，以避免在使用EXT4与WiredTiger时可能发生的性能问题。</p>
+</li>
+</ul>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="http://link.hhtjim.com/163/486814412.mp3">
+            </audio>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="b76f43e1098e8eec596b" data-cs="bce4c27bdf3a220cdb541e8fc8079f1eeb74ab1e" data-r="kangshf.github.io" data-o="kangshf" data-a="kangshf" data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#几个建议"><span class="toc-number">3.</span> <span class="toc-text">几个建议</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
