@@ -75,7 +75,7 @@
 <li>修改mysql远程访问用户及权限：<br> 默认只允许root帐户在本地登录，如果要在其它机器上连接mysql，必须修改root允许远程连接，或者添加一个允许远程连接的帐户:  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; GRANT ALL PRIVILEGES ON *.* TO &apos;root&apos;@&apos;%&apos; IDENTIFIED BY &apos;passwd&apos; WITH GRANT OPTION;  </span><br><span class="line">mysql &gt; GRANT ALL PRIVILEGES ON *.* TO &apos;root&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;passwd&apos; WITH GRANT OPTION;  </span><br><span class="line">mysql &gt; flush privileges;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>安装前请检查系统版本为CentOS7<br>CentOS6用户请第一步执行<br><code># wget https://dev.mysql.com/get/mysql80-community-release-el6-1.noarch.rpm</code><br>第二步安装也将安装文件改为el6<br><code># rpm -ivh mysql80-community-release-el6-1.noarch.rpm</code><br>后面步骤基本一致  </p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>安装前请检查系统版本为CentOS7<br>CentOS6用户请第一步执行<br><code># wget https://dev.mysql.com/get/mysql80-community-release-el6-1.noarch.rpm</code><br>第二步安装也将安装文件改为el6<br><code># rpm -ivh mysql80-community-release-el6-1.noarch.rpm</code><br>后面步骤基本一致  </p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
@@ -90,7 +90,7 @@
     </div>
     
         <div class="side">
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#默认配置文件路径"><span class="toc-number">3.</span> <span class="toc-text">默认配置文件路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改密码及权限设置"><span class="toc-number">4.</span> <span class="toc-text">修改密码及权限设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注意事项"><span class="toc-number">5.</span> <span class="toc-text">注意事项</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#默认配置文件路径"><span class="toc-number">3.</span> <span class="toc-text">默认配置文件路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改密码及权限设置"><span class="toc-number">4.</span> <span class="toc-text">修改密码及权限设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注意事项"><span class="toc-number">5.</span> <span class="toc-text">注意事项</span></a></li></ol>
         </div>
     
 </div>
